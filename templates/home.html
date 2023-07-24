@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="form-container">
+<link rel="stylesheet" href="../static/style.css">
+<form method="POST" action="{{ url_for('home') }}">
+    {{ search_form.hidden_tag() }}
+    <div class="input-group mb-3">
+      {{ search_form.search(class_="form-control", placeholder="Search cocktails") }}
+      <div class="input-group-append">
+        <button class="btn btn-secondary" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="best">BESTSELLERS</div>
+
+  <div class="card-group">
+    <div class="card">
+      <img src="../static/vodka.jpeg" class="card-img-top" alt="..." width="00px" height="300px">
+      <div class="card-body">
+        <h5 class="card-title"><a href="#">Long Vodka</a></h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+      <div class="card-footer">
+        <small class="text-body-secondary">Last updated 27 days ago</small>
+      </div>
+    </div>
+    <div class="card">
+      <img src="../static/ginfiz.jpeg" class="card-img-top" alt="..." width="100px" height="300px">
+      <div class="card-body">
+        <h5 class="card-title"><a href="#">Gin Fizz<a/></h5>
+        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+      </div>
+      <div class="card-footer">
+        <small class="text-body-secondary">Last updated 27 days ago</small>
+      </div>
+    </div>
+    <div class="card">
+      <img src="../static/beer.jpeg" class="card-img-top" alt="... " width="100px" height="300px">
+      <div class="card-body">
+        <h5 class="card-title"><a href="#">California Root Beer</a></h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      </div>
+      <div class="card-footer">
+        <small class="text-body-secondary">Last updated 27 days ago</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{%endblock%}

@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+
+{%block content%}
+
+<h2>Search Results for "{{ term }}"</h2>
+
+{% if cocktails %}
+  <ul class="list-group">
+    {% for cocktail in cocktails %}
+      <li class="list-group-item">
+        <a href="{{ url_for('cocktail', id=cocktail['idDrink']) }}">{{ cocktail['strDrink'] }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No cocktails found for "{{ term }}".</p>
+{% endif %}
+{% for cocktail in cocktails %}
+  <div class="cocktail">
+    <a href="{{ url_for('cocktail', id=cocktail['id']) }}">
+      <h3>{{ cocktail['name'] }}</h3>
+      <img src="{{ cocktail['image'] }}" alt="{{ cocktail['name'] }}">
+    </a>
+  </div>
+{% endfor %}
+
+
+
+
+
+
+{%endblock%}

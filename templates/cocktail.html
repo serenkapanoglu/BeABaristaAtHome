@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<h1>{{ cocktail['name'] }}</h1>
+
+<img src="{{ cocktail['image'] }}" alt="{{ cocktail['name'] }}" width="150px" height="150px">
+
+<h3>{{ cocktail['instructions'] }}</h3>
+
+<h4>Ingredients:</h4>
+<ul>
+  {% for ingredient, measure in cocktail['ingredients'] %}
+    <li><b>{{ measure }}</b> - {{ ingredient }}</li>
+  {% endfor %}
+</ul>
+
+<hr>
+
+<h2>Comments:</h2>
+{% for comment in comments %}
+  <p>{{ comment.text }}</p>
+{% else %}
+  <p>No comments yet.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Add a Comment:</h2>
+<form method="POST" action="{{ url_for('cocktail', id=cocktail['id']) }}">
+  {{ form.csrf_token }}
+  <div class="form-group">
+    {{ form.comment.label }}
+    {{ form.comment(class_='form-control', rows=4) }}
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
