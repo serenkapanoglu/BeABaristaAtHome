@@ -11,7 +11,7 @@ from forms import UserAddForm, LoginForm,SearchForm, CommentForm
 app = Flask(__name__)
 app.app_context().push()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///nobpa2'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 connect_db(app)
 db.create_all()
@@ -93,8 +93,12 @@ def cocktail(id):
 
     if form.validate_on_submit():
         comment_text = form.comment.data
-        print(comment_text)
-        print("Hello")
+        
+        cocktail = Cocktail.query.get(id)
+        if cocktail is None:
+            flash("Cocktail not found", "error")
+            return redirect(url_for('cocktail', id=id))
+        
 
         
         comment = Comment(text=comment_text, cocktail_id=id)
@@ -102,6 +106,7 @@ def cocktail(id):
         
         db.session.add(comment)
         db.session.commit()
+        
 
         flash("Comment added successfully", "success")
         return redirect(url_for('cocktail', id=id))
@@ -110,26 +115,6 @@ def cocktail(id):
     comments = Comment.query.filter_by(cocktail_id=id).all()
 
     return render_template("cocktail.html", cocktail=processed_coctail, form=form, comments=comments)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -192,3 +177,4 @@ def logout():
     session.pop(CURR_USER_KEY)
     flash("You have logged out successfully", "success")
     return redirect("/")
+
