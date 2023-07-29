@@ -1,6 +1,8 @@
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
+
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -86,7 +88,8 @@ class Comment(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     text=db.Column(db.Text, nullable=False)
     
-    cocktail_id = db.Column(db.Integer, nullable=False)
+    cocktail = relationship("Cocktail",backref="comments" )
+    cocktail_id = db.Column(db.Integer,db.ForeignKey("cocktails.id"), nullable=False)
     
     
 
