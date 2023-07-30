@@ -58,7 +58,15 @@ body {
 .footer-text {
   color: #d8d8d8;
 }
+.footer-text a{
+  color: #d8d8d8;
+  outline: none;
+  font-size: small;
 
+}
+.footer-text a:hover{
+  color: aqua;
+}
 .card{
     margin: 30px;
 }
@@ -120,6 +128,11 @@ body {
   font-size: 20px;
   font-weight: 600;
    }
+
+
+
+
+
 
 
 
