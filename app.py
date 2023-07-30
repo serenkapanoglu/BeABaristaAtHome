@@ -6,6 +6,7 @@ from models import Cocktail
 from models import db, connect_db, User, Comment
 from forms import UserAddForm, LoginForm,SearchForm, CommentForm
 
+from flask_login import LoginManager, current_user, login_user, login_required, logout_user
 
 
 app = Flask(__name__)
@@ -19,7 +20,12 @@ db.create_all()
 app.config['SECRET_KEY'] = "I'LL NEVER TELL!!"
 CURR_USER_KEY = "curr_user"
 
+login_manager = LoginManager(app)
 
+# Load the user_loader function
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -94,10 +100,10 @@ def cocktail(id):
     if form.validate_on_submit():
         comment_text = form.comment.data
         
-        cocktail = Cocktail.query.get(id)
-        if cocktail is None:
-            flash("Cocktail not found", "error")
-            return redirect(url_for('cocktail', id=id))
+       # cocktail = Cocktail.query.get(id)
+        #if cocktail is None:
+         #   flash("Cocktail not found", "error")
+          #  return redirect(url_for('cocktail', id=id))
         
 
         
@@ -115,12 +121,6 @@ def cocktail(id):
     comments = Comment.query.filter_by(cocktail_id=id).all()
 
     return render_template("cocktail.html", cocktail=processed_coctail, form=form, comments=comments)
-
-
-
-
-
-
 
 
 
@@ -155,7 +155,7 @@ def login_user():
 
 @app.route("/register", methods=["GET", "POST"])
 def register_user():
-    """User register handling"""
+  
     form = UserAddForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -172,9 +172,10 @@ def register_user():
         return render_template("register.html", form=form)
 
 
+
+
 @app.route("/logout")
 def logout():
     session.pop(CURR_USER_KEY)
     flash("You have logged out successfully", "success")
     return redirect("/")
-
