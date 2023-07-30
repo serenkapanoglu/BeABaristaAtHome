@@ -1,39 +1,62 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block content %}
+  <div class="container">
+    <link rel="stylesheet" href="../static/style3.css">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <img src="{{ cocktail['image'] }}" class="card-img-top" alt="{{ cocktail['name'] }} width="400px" height="400px">
+          <div class="card-body">
+            <h5 class="card-title">{{ cocktail['name'] }}</h5>
+            <p class="card-text">{{ cocktail['instructions'] }}</p>
+          </div>
+        </div>
+      </div>
+      
+   
 
-<h1>{{ cocktail['name'] }}</h1>
-
-<img src="{{ cocktail['image'] }}" alt="{{ cocktail['name'] }}" width="150px" height="150px">
-
-<h3>{{ cocktail['instructions'] }}</h3>
-
-<h4>Ingredients:</h4>
-<ul>
-  {% for ingredient, measure in cocktail['ingredients'] %}
-    <li><b>{{ measure }}</b> - {{ ingredient }}</li>
-  {% endfor %}
-</ul>
-
-<hr>
-
-<h2>Comments:</h2>
-{% for comment in comments %}
-  <p>{{ comment.text }}</p>
-{% else %}
-  <p>No comments yet.</p>
-{% endfor %}
-
-<hr>
-
-<h2>Add a Comment:</h2>
-<form method="POST" action="{{ url_for('cocktail', id=cocktail['id']) }}">
-  {{ form.csrf_token }}
-  <div class="form-group">
-    {{ form.comment.label }}
-    {{ form.comment(class_='form-control', rows=4) }}
+   <div class="col-md-6 mb-4">
+    <div class="cart">
+    <h3 class="baslik">Ingredients</h3>
+    <ul class="malzemeler">
+      {% for ingredient, measure in cocktail['ingredients'] %}
+        <li>
+          <i class="fas fa-glass-martini-alt"></i>
+          {{ measure }} <i class="fas fa-caret-right"></i>
+           {{ ingredient }}
+          </li>
+      {% endfor %}
+    </ul>
+    </div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  </div>
+
+
+  <h2>Comments:</h2>
+  {% for comment in comments %}
+    <p>{{ comment.text }}</p>
+  {% else %}
+    <p>No comments yet.</p>
+  {% endfor %}
+  
+  <hr>
+  
+  <h2>Add a Comment:</h2>
+  <form method="POST" action="{{ url_for('cocktail', id=cocktail['id']) }}">
+    {{ form.csrf_token }}
+    <div class="form-group">
+      {{ form.comment.label }}
+      {{ form.comment(class_='form-control', rows=4) }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  </div>
+
+
+
+
+
+
 
 {% endblock %}
