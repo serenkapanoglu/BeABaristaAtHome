@@ -41,7 +41,7 @@ class User(db.Model):
 
     @classmethod
     def register(cls, username, password, first_name, last_name):
-        """Register handling, password crypted"""
+       
 
         hashed = bcrypt.generate_password_hash(password)
         hashed_utf8 = hashed.decode("utf8")
@@ -56,7 +56,7 @@ class User(db.Model):
 
     @classmethod
     def authenticate(cls, username, password):
-        """Checks user is valid or not"""
+        
 
         user = User.query.filter_by(username = username).first()
 
@@ -65,11 +65,10 @@ class User(db.Model):
         else:
             return False
 
-
+    
 
 
 class Cocktail(db.Model):
-    """Cocktail model"""
 
     __tablename__ = "cocktails"
 
@@ -81,17 +80,16 @@ class Cocktail(db.Model):
     def __repr__(self):
         return f"<Cocktail {self.name}>"
 
-
+    
 class Comment(db.Model):
     __tablename__="comments"
     
     id=db.Column(db.Integer, primary_key=True)
     text=db.Column(db.Text, nullable=False)
+    cocktail_id=db.Column(db.Integer, nullable=False)
     
-    cocktail = relationship("Cocktail",backref="comments" )
-    cocktail_id = db.Column(db.Integer,db.ForeignKey("cocktails.id"), nullable=False)
-    
-    
+
+
 
 
 def connect_db(app):
@@ -99,3 +97,4 @@ def connect_db(app):
 
     db.app = app
     db.init_app(app)
+
