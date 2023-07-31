@@ -1,17 +1,18 @@
 from flask import Flask, render_template, request, flash, redirect, session,url_for,abort
 import requests
 from models import Cocktail
+import random
 
 
 from models import db, connect_db, User, Comment
 from forms import UserAddForm, LoginForm,SearchForm, CommentForm
 
-from flask_login import LoginManager, current_user, login_user, login_required, logout_user
+
 
 
 app = Flask(__name__)
 app.app_context().push()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///nobpa2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cocktails'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 connect_db(app)
@@ -20,12 +21,8 @@ db.create_all()
 app.config['SECRET_KEY'] = "I'LL NEVER TELL!!"
 CURR_USER_KEY = "curr_user"
 
-login_manager = LoginManager(app)
 
-# Load the user_loader function
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -35,11 +32,31 @@ def home():
     if search_form.validate_on_submit():
         search_term=search_form.search.data
         return redirect(url_for("search_cocktails", term=search_term))
-    return render_template("home.html", search_form=search_form)
+    
+    response = requests.get("https://www.thecocktaildb.com/api/json/v1/1/random.php")
+    data = response.json()
+    cocktail = data["drinks"][0]
+
+    processed_coctail = {}
+    processed_coctail['id'] = cocktail['idDrink']
+    processed_coctail['name'] = cocktail['strDrink']
+    processed_coctail['instructions'] = cocktail['strInstructions']
+    processed_coctail['image'] = cocktail['strDrinkThumb']
+    processed_coctail['ingredients'] = []
+
+    for i in range(1, 16):
+        ingredient_key = f'strIngredient{i}'
+        measure_key = f'strMeasure{i}'
+
+        if cocktail[ingredient_key] and cocktail[measure_key]:
+            ingredient = cocktail[ingredient_key]
+            measure = cocktail[measure_key]
+            processed_coctail['ingredients'].append((ingredient, measure))
+
+    return render_template("home.html", search_form=search_form, cocktail=processed_coctail)
 
 @app.route("/search/<term>")
 def search_cocktails(term):
-    """Search cocktails based on the given term"""
     response = requests.get(f"https://www.thecocktaildb.com/api/json/v1/1/search.php?s={term}")
     data = response.json()
     cocktails = data["drinks"] if data["drinks"] else []
@@ -121,6 +138,17 @@ def cocktail(id):
     comments = Comment.query.filter_by(cocktail_id=id).all()
 
     return render_template("cocktail.html", cocktail=processed_coctail, form=form, comments=comments)
+
+
+
+
+@app.route("/delete/comment/<int:cocktail_id>/delete/comment/<int:id>", methods=["POST"])
+def delete_comment(cocktail_id, id):
+    comment = Comment.query.get_or_404(id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash("Comment deleted successfully", "success")
+    return redirect(url_for('cocktail', id=cocktail_id))
 
 
 
