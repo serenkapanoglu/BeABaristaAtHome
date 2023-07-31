@@ -69,6 +69,8 @@ body {
 }
 .card{
     margin: 30px;
+    justify-content: center;
+    text-align: center;
 }
 
 .card-group{
@@ -133,9 +135,3 @@ body {
 
 
 
-
-
-
-
-
-   
