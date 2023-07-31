@@ -33,14 +33,22 @@
   </div>
 
 
+
   <h2>Comments:</h2>
   {% for comment in comments %}
     <p>{{ comment.text }}</p>
+    <form method="POST" action="{{ url_for('delete_comment', cocktail_id=cocktail.id, id=comment.id) }}">
+      {{ form.csrf_token }}
+      <button type="submit" class="btn btn-danger">Delete Comment</button>
+    </form>
+    <hr>
   {% else %}
     <p>No comments yet.</p>
   {% endfor %}
   
-  <hr>
+
+  
+
   
   <h2>Add a Comment:</h2>
   <form method="POST" action="{{ url_for('cocktail', id=cocktail['id']) }}">
@@ -52,11 +60,6 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
   </div>
-
-
-
-
-
 
 
 {% endblock %}
